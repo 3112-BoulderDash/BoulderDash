@@ -28,7 +28,7 @@ public abstract class TraversalEntity
         posY++
     }
 
-    public abstract string DrawMe();
+    public abstract string DrawMe(); //Rename to getSprite, return an array. 
     
     public abstract void ScheduleUpdate();  //Runs every tick by gamefield+
 }
