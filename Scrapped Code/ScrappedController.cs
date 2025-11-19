@@ -24,19 +24,19 @@ public class Controller : IController
 
         switch (input)
         {
-            case ConsoleKey.LeftArrow
+            case ConsoleKey.LeftArrow:
                 left = true;
                 break;
 
-            case ConsoleKey.RightArrow
+            case ConsoleKey.RightArrow:
                 right = true;
                 break;
 
-            case ConsoleKey.UpArrow
+            case ConsoleKey.UpArrow:
                 up = true;
                 break;
 
-            case ConsoleKey.DownArrow
+            case ConsoleKey.DownArrow:
                 down = true;
                 break;
         }
