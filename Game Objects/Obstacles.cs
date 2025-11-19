@@ -17,4 +17,13 @@ public class Obstacles : TraversalEntity
     {
         MoveDown();
     }
+    public override String DrawMe()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void ScheduleUpdate()
+    {
+        throw new NotImplementedException();
+    }
 }

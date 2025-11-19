@@ -12,10 +12,7 @@ public class Car : TraversalEntity
         this.Controller = controller;
     }
     
-    public override String DrawMe()
-    {
-        return "To be developed";
-    }
+
 
     public void Move(Controller controller)
     {
@@ -26,5 +23,18 @@ public class Car : TraversalEntity
 
         if (controller.RightInput())
             MoveRight();
+    }
+    public override String DrawMe()
+    {
+        throw new NotImplementedException();
+    }
+    public override void CollisionAction(TraversalEntity Tentity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void ScheduleUpdate()
+    {
+        throw new NotImplementedException();
     }
 }
