@@ -15,17 +15,17 @@ public abstract class TraversalEntity
 
     protected void MoveLeft()
     {
-        posX--
+        posX--;
     }
 
     protected void MoveRight()
     {
-        posX++
+        posX++;
     }
 
     protected void MoveDown()
     {
-        posY++
+        posY++;
     }
 
     public abstract string DrawMe(); //Rename to getSprite, return an array. 

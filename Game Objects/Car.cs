@@ -9,12 +9,12 @@ public class Car : TraversalEntity
     public Car(int posX, int posY, CarTypes type, IController controller) : base(posX, posY)
     {
         Type = type;
-        this.controller = controller;
+        this.Controller = controller;
     }
     
     public override String DrawMe()
     {
-        
+        return "To be developed";
     }
 
     public void Move(Controller controller)

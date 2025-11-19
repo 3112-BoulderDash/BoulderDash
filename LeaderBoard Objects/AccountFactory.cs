@@ -1,8 +1,8 @@
 ﻿namespace BoulderDash;
 /*should totalAccount be all accounts the factory creates or all accounts in the program?
 If we do store accounts in a txt file or smth, I don't think totalAccount should be in here 
-Ill come back to this and update AccountFactory based on what yall think.*/
-public static class AccountFactory
+I'll come back to this and update AccountFactory based on what you think.*/
+public class AccountFactory
 {
     /*initialize id counter at 1 so when a user
      creates an account in CreateAccount, its assigned 1 and 
@@ -32,5 +32,4 @@ public static class AccountFactory
         return new Account(username, id); // returns as IAccount
     }
 }
-}
-}
+
