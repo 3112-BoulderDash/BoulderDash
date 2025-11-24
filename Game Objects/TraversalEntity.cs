@@ -28,6 +28,21 @@ public abstract class TraversalEntity
         posY++;
     }
 
+    public void RequestMoveLeft()
+    {
+        MoveLeft();
+    }
+
+    public void RequestMoveRight()
+    {
+        MoveRight();
+    }
+
+    public void RequestMoveDown()
+    {
+        MoveDown();
+    }
+    
     public abstract string DrawMe(); //Rename to getSprite, return an array. 
     
     public abstract void ScheduleUpdate();  //Runs every tick by gamefield+
