@@ -49,6 +49,7 @@ public class LeaderBoard
     {
         return _scores
             .Where(s => s.PlayerId == userId)
+            .OrderByDescending(s => s.ScoreCount)
             .ToList();
     }
 }
