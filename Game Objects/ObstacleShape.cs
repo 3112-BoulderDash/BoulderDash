@@ -1,4 +1,4 @@
-namespace BoulderDash;
+namespace  Boulder_Dash;
 
 public enum ObstacleShape
 {

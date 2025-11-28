@@ -1,4 +1,4 @@
-namespace BoulderDash;
+namespace  Boulder_Dash;
 
 public class Obstacles : TraversalEntity 
 {
@@ -19,7 +19,8 @@ public class Obstacles : TraversalEntity
     }
     public override String DrawMe()
     {
-        throw new NotImplementedException();
+      //  throw new NotImplementedException();
+      return "2";
     }
 
     public override void ScheduleUpdate()

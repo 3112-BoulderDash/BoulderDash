@@ -1,4 +1,4 @@
-﻿namespace BoulderDash;
+﻿namespace  Boulder_Dash;
 /*should totalAccount be all accounts the factory creates or all accounts in the program?
 If we do store accounts in a txt file or smth, I don't think totalAccount should be in here 
 I'll come back to this and update AccountFactory based on what you think.*/

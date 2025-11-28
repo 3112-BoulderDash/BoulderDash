@@ -1,6 +1,6 @@
-namespace BoulderDash;
+namespace  Boulder_Dash;
 
-public class Controller : IController
+public class ScrappedController : IController
 {
     public int AccountID { get; set; }
     private bool left;
@@ -8,7 +8,7 @@ public class Controller : IController
     private bool up;
     private bool down;
 
-    public Controller(int accountID)
+    public ScrappedController(int accountID)
     {
         AccountID = accountID;
     }

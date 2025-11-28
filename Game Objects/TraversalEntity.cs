@@ -1,4 +1,4 @@
-namespace BoulderDash;
+namespace  Boulder_Dash;
 
 public abstract class TraversalEntity
 {
@@ -6,10 +6,10 @@ public abstract class TraversalEntity
     public int posY { get; set; }
     
     protected TraversalEntity(int posX, int posY)
-        {
+    {
         this.posX = posX;
         this.posY = posY;
-        }
+    }
 
     public abstract void CollisionAction(TraversalEntity Tentity);
 
@@ -28,22 +28,22 @@ public abstract class TraversalEntity
         posY++;
     }
 
-    public void RequestMoveLeft()
-    {
-        MoveLeft();
-    }
-
-    public void RequestMoveRight()
-    {
-        MoveRight();
-    }
-
-    public void RequestMoveDown()
-    {
-        MoveDown();
-    }
+    // public void RequestMoveLeft()
+    // {
+    //     MoveLeft();
+    // }
+    //
+    // public void RequestMoveRight()
+    // {
+    //     MoveRight();
+    // }
+    //
+    // public void RequestMoveDown()
+    // {
+    //     MoveDown();
+    // }
     
-    public abstract string DrawMe(); //Rename to getSprite, return an array. 
+    public abstract string DrawMe(); //Rename to RenderInstance, return an array. 
     
     public abstract void ScheduleUpdate();  //Runs every tick by gamefield+
 }

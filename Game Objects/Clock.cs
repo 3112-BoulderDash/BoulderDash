@@ -1,4 +1,4 @@
-namespace Boulder_Dash___Final_Project;
+namespace   Boulder_Dash;
 
 public class Clock
 {
@@ -23,7 +23,7 @@ public class Clock
         //Console.WriteLine(clockCounter);
         if (clockCounter == TickSpeed)
         {
-            Console.WriteLine("tick occured");
+            //Console.WriteLine("tick occured");
             clockCounter = 0;
             return true;
         }

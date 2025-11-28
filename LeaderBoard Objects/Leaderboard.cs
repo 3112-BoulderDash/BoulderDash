@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-namespace BoulderDash;
+namespace  Boulder_Dash;
 
 public class LeaderBoard
 {
