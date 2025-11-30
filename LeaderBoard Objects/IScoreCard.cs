@@ -4,6 +4,7 @@ public interface IScoreCard
 {
     int PlayerId { get; }
     int ScoreCount { get; }
+    string Username { get; }
     string PrintScore();
 
 }
