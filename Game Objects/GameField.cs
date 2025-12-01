@@ -2,31 +2,52 @@ namespace Boulder_Dash;
 
 public class GameField
 {
+    //Games instance, for singleton purposes 
+    private static GameField gameInstance = null;
     private bool gamePaused;
     private bool gameEnded;
 
 
     private Car playerCar;
+    private ObstacleSpawner obstacleSpawner;
     private List<TraversalEntity> activeEntities = new List<TraversalEntity>(); //List of current entities in the game
+
+    public int rowLength { get; } = 3;
+
+    public int columnLength { get; } = 8;
     
-    private static int rowLength = 3; 
-    private static int columnLength = 4;
     //The Array that will be used to update the game
-    private TraversalEntity[,] gameArray = new TraversalEntity[rowLength, columnLength];
+    private TraversalEntity[,] gameArray;
     
     private Clock gameClock = new Clock();
+
+    private GameField()
+    {
+        gameArray = new TraversalEntity[rowLength, columnLength];
+        gamePaused = true;
+        gameEnded = true;
+    }
+    
+    //Get Game instance
+    public static GameField GetGameInstance()
+    {
+        if (gameInstance == null) gameInstance = new GameField();
+        return gameInstance;
+    }
     
     //Game functions
-
-    public void StartGame(Controller PlayerController)
+    public void StartGame(Controller playerController)
     {
         if (gameEnded) gameEnded = false;
+        if (gamePaused) gamePaused = false;
         //Reset Variables needed here
         
         //Create the Player character and give them the controller
         //AddInstance();
-        playerCar = new Car(1, columnLength-1, CarTypes.Ferrari, PlayerController);
-        activeEntities.Add(playerCar);
+        playerCar = new Car(1, columnLength-1, CarTypes.Ferrari, playerController);
+        AddInstance(playerCar);
+        
+        obstacleSpawner = new ObstacleSpawner();
     }
 
     public void RunGame()
@@ -46,7 +67,10 @@ public class GameField
         if (gameClock.hasTickOccured())
         {
             //Run List of  functions
+            InstanceStep();
             
+            //Spawn Obstacles / Tick for obstacle creation
+            obstacleSpawner.RequestObstacles();
         }
         //Console.WriteLine(gameClock.);
 
@@ -114,58 +138,47 @@ public class GameField
 
         //Print string 
         Console.WriteLine(screenString);
+
+        Console.WriteLine("HP: " + playerCar.HealthPoints);
     }
 
     //Runs all the other instances code, Executes every tick. 
     private void InstanceStep()
     {
         //Foreach loop for each element in the 2D array. 
+        for (int i = 0; i < activeEntities.Count; i++)
+        {
+            TraversalEntity e = activeEntities[i];
+            
+            //Run step function
+            e.Step();
+
+            if (activeEntities.IndexOf(e) == -1) i--;
+        }
     }
 
     //Adding travesalEntitys into game
-    public void AddInstance(int instance, int startX, int starY)
+    public void AddInstance(TraversalEntity instance)
     {
         //Put instance in new space, 
+        //Insert Instance by adding to the actives list and then run populate game array
+        activeEntities.Add(instance);
+        PopulateGameArray();
+        
+        //also Many objects need to be able to reference game field, maybe it should be a singleton?
     }
-    
-    //Checking if space is free
-    // public TraversalEntity GetInstanceFromSpace(int x, int y)
-    // {
-    //     return gameArray[x, y];
-    // }
 
-    // public void MoveInstanceTo(int currX, int currY, int newX, int newY)
-    // {
-    //     //Correct any invalid coordinates
-    //     currY %= gameArray.GetLength(0); currY = int.Abs(currY);
-    //     newY %= gameArray.GetLength(0); newY = int.Abs(newY);
-    //     currX %= gameArray.GetLength(1); currX = int.Abs(currX);
-    //     newX %= gameArray.GetLength(1); newX = int.Abs(newX);
-    //     
-    //     //Console.WriteLine($"Recent Coords: {currX}, {currY} \nNew Coords: {newX}, {newY}");
-    //     
-    //     if (!(currX == newX && currY == newY))
-    //     {
-    //         
-    //         //Switch out the current index with a 0 and input us into the new area. 
-    //         TraversalEntity? instance = gameArray[currY, currX];
-    //         gameArray[newY, newX] = instance;
-    //         gameArray[currY, currX] = null;
-    //     }
-    // }
-    
-    //Temporary function, will be scrapped after controls for player works. 
+    public TraversalEntity getInstanceAtPosition(int x, int y)
+    {
+        //If X and Y go out of bounds then return null.
+        if (x < 0 || x >  rowLength - 1 || y < 0 || y >  columnLength - 1 ) return null;
+        
+        return gameArray[x, y];
+    }
 
-    // public int[] whereIsOne()
-    // {
-    //     for (int row = 0; row < rowLength; row++)
-    //     {
-    //         for (int col = 0; col < columnLength; col++)
-    //         {
-    //             //if (gameArray[row, col] == 1) return new int[] { row, col };
-    //         }
-    //     }
-    //
-    //     return new int[] {-1, -1};
-    // }
+    public void RemoveInstance(TraversalEntity instance)
+    {
+        activeEntities.Remove(instance);
+        PopulateGameArray();
+    }
 }

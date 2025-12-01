@@ -8,6 +8,7 @@ public class Car : TraversalEntity
 
     public Car(int posX, int posY, CarTypes type, Controller controller) : base(posX, posY)
     {
+        HealthPoints = 3;
         Type = type;
         this.controller = controller;
     }
@@ -35,8 +36,8 @@ public class Car : TraversalEntity
         throw new NotImplementedException();
     }
 
-    public override void ScheduleUpdate()
+    public override void Step()
     {
-        throw new NotImplementedException();
+        //Does nothing
     }
 }

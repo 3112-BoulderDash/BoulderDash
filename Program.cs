@@ -16,7 +16,7 @@ class Program
         
         IAccount currentPlayer = RunLoginMenu();
 
-        GameField gameField = new GameField();
+        GameField gameField = GameField.GetGameInstance();
         Controller playerController = new Controller();
         
         gameField.StartGame(playerController);

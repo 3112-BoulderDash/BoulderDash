@@ -3,7 +3,7 @@ namespace   Boulder_Dash;
 public class Clock
 {
     private int gameTime = 0;
-    public int TickSpeed { get; set; } = 200; //In milliseconds
+    public int TickSpeed { get; set; } = 60; //In milliseconds
     private int clockCounter = 0;
 
     public void passTime()

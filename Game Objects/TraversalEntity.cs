@@ -45,5 +45,5 @@ public abstract class TraversalEntity
     
     public abstract string DrawMe(); //Rename to RenderInstance, return an array. 
     
-    public abstract void ScheduleUpdate();  //Runs every tick by gamefield+
+    public abstract void Step();  //Runs every tick by gamefield+
 }

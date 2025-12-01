@@ -23,8 +23,23 @@ public class Obstacles : TraversalEntity
       return "2";
     }
 
-    public override void ScheduleUpdate()
+    public override void Step()
     {
-        throw new NotImplementedException();
+        //Check if we are meeting with a car
+        GameField gameField = GameField.GetGameInstance();
+        TraversalEntity entity = gameField.getInstanceAtPosition(posX, posY + 1);
+        
+        Car playerCar = entity as Car;
+        if (playerCar != null)
+        {
+            playerCar.HealthPoints--;
+            gameField.RemoveInstance(this);
+        }
+        
+        //Check if we are going to move off grid if so DELETE ourselves 
+        if (posY + 1 >= gameField.columnLength) gameField.RemoveInstance(this);
+        
+        //If we are at the bottom then delete self, use the gamefield array sizes to figure this out. WHEN it becomes a signleton
+        MoveDown();
     }
 }
