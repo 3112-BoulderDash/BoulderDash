@@ -3,9 +3,11 @@ class Program
 {
     //Single shared AccountFactory instance
     private static AccountFactory AccountFactory = new AccountFactory();
-
     static void Main(string[] args)
     {
+        //uncomment to test menu
+        //MainMenu menu = new MainMenu();
+        //menu.Run();
         LeaderBoard leaderBoard = new LeaderBoard();
         foreach (var score in ScoreFileStorage.LoadScores())
         {
@@ -36,6 +38,7 @@ class Program
             gameField.RunGame();
         }
     }
+    
 
     // login menu
     private static IAccount RunLoginMenu()
