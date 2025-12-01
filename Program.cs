@@ -5,9 +5,7 @@ class Program
     private static AccountFactory AccountFactory = new AccountFactory();
     static void Main(string[] args)
     {
-        //uncomment to test menu
-        //MainMenu menu = new MainMenu();
-        //menu.Run();
+        
         LeaderBoard leaderBoard = new LeaderBoard();
         foreach (var score in ScoreFileStorage.LoadScores())
         {
@@ -18,7 +16,8 @@ class Program
 
         GameField gameField = new GameField();
         Controller playerController = new Controller();
-        
+        // main menu will go here
+        //RunMainMenu();
         gameField.StartGame(playerController);
         int x = 1;
         int y = 3;
@@ -123,5 +122,43 @@ class Program
 
         Console.WriteLine("Press any key to start the game...");
         Console.ReadKey(true); */
+   
+   //main menu
+   public static void RunMainMenu()
+    {
+        bool running = true;
+
+        while (running)
+        {
+            Console.WriteLine("1. Start Game");
+            Console.WriteLine("2. Display Leaderboard");
+            Console.WriteLine("3. Exit");
+            
+            string? input = Console.ReadLine();
+
+            switch (input)
+            {
+                case "1":
+                    //call for game start
+                    //gameField.RunGame();
+                    break;
+
+                case "2":
+                    //call display leaderboard
+                    //leaderBoard.Display();
+                    break;
+                //exit
+                case "3":
+                    running = false;
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid option.");
+                    break;
+            }
+        }
     }
+}
+
+
 
