@@ -25,7 +25,7 @@ class Program
 
         // temporary section - when bryan implements the health functionality
         // and how the game ends, all temp should change
-        TempScoreLoggingDemo(leaderBoard, currentPlayer);
+        //TempScoreLoggingDemo(leaderBoard, currentPlayer);
 
         while (true)
         {
@@ -97,7 +97,7 @@ class Program
     }
 
     // temp score logging, logic should stay similar once end to game loop is created.
-    private static void TempScoreLoggingDemo(LeaderBoard leaderBoard, IAccount currentPlayer)
+   /* private static void TempScoreLoggingDemo(LeaderBoard leaderBoard, IAccount currentPlayer)
     {
         Console.Clear();
         Console.WriteLine($"Logged in as: {currentPlayer.Username} (ID {currentPlayer.Id})");
@@ -122,6 +122,6 @@ class Program
         }
 
         Console.WriteLine("Press any key to start the game...");
-        Console.ReadKey(true);
+        Console.ReadKey(true); */
     }
-}
+
