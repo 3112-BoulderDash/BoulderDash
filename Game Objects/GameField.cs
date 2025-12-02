@@ -68,16 +68,16 @@ public class GameField
 
             //pass time with Clock 
             gameClock.passTime();
+            //gameClock.TickSpeed = 15;
             if (gameClock.hasTickOccured())
             {
                 //Run List of  functions
                 InstanceStep();
-                speedUpTime--;
-                if (speedUpTime == 0)
+                speedUpTimer--;
+                if (speedUpTimer == 0)
                 {
-                    speedUpTime = (int)(speedUpTime * 1.5);
                     speedUpTimer = speedUpTime;
-                    if (gameClock.TickSpeed > 10) gameClock.TickSpeed -= 2;
+                    if (gameClock.TickSpeed > 14) gameClock.TickSpeed -= 2;
                 }
 
                 //Spawn Obstacles / Tick for obstacle creation
