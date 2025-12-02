@@ -17,7 +17,7 @@ class Program
         GameField gameField = GameField.GetGameInstance();
         Controller playerController = new Controller();
         // main menu will go here
-        //RunMainMenu();
+        RunMainMenu();
         gameField.StartGame(playerController);
 
         // temporary section - when bryan implements the health functionality

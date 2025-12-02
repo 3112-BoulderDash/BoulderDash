@@ -22,9 +22,6 @@ public class Car : TraversalEntity
                  
         if (controller.IsKeyDown(KeyCode.Right)) 
             posX++;
-
-        if (controller.IsKeyDown(KeyCode.Down))
-            posY++;
     }
     public override String DrawMe()
     {
