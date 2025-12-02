@@ -18,11 +18,12 @@ class Program
         Controller playerController = new Controller();
         // main menu will go here
         //RunMainMenu();
-        gameField.StartGame(playerController);
-
         // temporary section - when bryan implements the health functionality
         // and how the game ends, all temp should change
-        //TempScoreLoggingDemo(leaderBoard, currentPlayer);
+        TempScoreLoggingDemo(leaderBoard, currentPlayer);
+        gameField.StartGame(playerController);
+
+        
 
         while (gameField.GameIsRunning())
         {
@@ -88,7 +89,7 @@ class Program
     }
 
     // temp score logging, logic should stay similar once end to game loop is created.
-   /* private static void TempScoreLoggingDemo(LeaderBoard leaderBoard, IAccount currentPlayer)
+    private static void TempScoreLoggingDemo(LeaderBoard leaderBoard, IAccount currentPlayer)
     {
         Console.Clear();
         Console.WriteLine($"Logged in as: {currentPlayer.Username} (ID {currentPlayer.Id})");
@@ -113,9 +114,10 @@ class Program
         }
 
         Console.WriteLine("Press any key to start the game...");
-        Console.ReadKey(true); */
-   
-   //main menu
+        Console.ReadKey(true);
+    }
+
+    //main menu
    public static void RunMainMenu()
     {
         bool running = true;
