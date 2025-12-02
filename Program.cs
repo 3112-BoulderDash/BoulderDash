@@ -19,21 +19,13 @@ class Program
         // main menu will go here
         //RunMainMenu();
         gameField.StartGame(playerController);
-        int x = 1;
-        int y = 3;
 
         // temporary section - when bryan implements the health functionality
         // and how the game ends, all temp should change
         //TempScoreLoggingDemo(leaderBoard, currentPlayer);
 
-        while (true)
+        while (gameField.GameIsRunning())
         {
-            //Console.WriteLine(gameField.whereIsOne()[0] + ", " + gameField.whereIsOne()[1]);
-            //int[] location = gameField.whereIsOne();
-            //gameField.MoveInstanceTo(location[1], location[0], x, y);
-            //
-            // if (Controller.IsKeyDown(KeyCode.Right)) x++;
-            // if (Controller.IsKeyDown(KeyCode.Left)) x--;
             gameField.RunGame();
         }
     }

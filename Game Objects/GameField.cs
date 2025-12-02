@@ -20,6 +20,8 @@ public class GameField
     private TraversalEntity[,] gameArray;
     
     private Clock gameClock = new Clock();
+    private int speedUpTime = 30;
+    private int speedUpTimer = 30;
 
     private GameField()
     {
@@ -52,28 +54,73 @@ public class GameField
 
     public void RunGame()
     {
-        //Scan for player input 
-        playerCar.ScanInputs();
-        
-        //Populates the game array that will be drawn.
-        PopulateGameArray();
-        
-        //Render screen
-        Render();
-        
-        
-        //pass time with Clock 
-        gameClock.passTime();
-        if (gameClock.hasTickOccured())
+        if (!gameEnded && !gamePaused)
         {
-            //Run List of  functions
-            InstanceStep();
-            
-            //Spawn Obstacles / Tick for obstacle creation
-            obstacleSpawner.RequestObstacles();
-        }
-        //Console.WriteLine(gameClock.);
+            //Scan for player input 
+            playerCar.ScanInputs();
 
+            //Populates the game array that will be drawn.
+            PopulateGameArray();
+
+            //Render screen
+            Render();
+
+
+            //pass time with Clock 
+            gameClock.passTime();
+            if (gameClock.hasTickOccured())
+            {
+                //Run List of  functions
+                InstanceStep();
+                speedUpTime--;
+                if (speedUpTime == 0)
+                {
+                    speedUpTime = (int)(speedUpTime * 1.5);
+                    speedUpTimer = speedUpTime;
+                    if (gameClock.TickSpeed > 10) gameClock.TickSpeed -= 2;
+                }
+
+                //Spawn Obstacles / Tick for obstacle creation
+                obstacleSpawner.RequestObstacles();
+            }
+            //Console.WriteLine(gameClock.);
+
+            //Check for ending condtions, end game if player is dead 
+            if (playerCar.HealthPoints < 1) EndGame();
+        }
+        else if (gamePaused)
+        {
+            Console.WriteLine("|\tPaused\t|");
+            Console.WriteLine("Choose one option");
+            Console.WriteLine("1: Resume Game");
+            Console.WriteLine("2: Quit Game");
+            int reponse = 0;
+            while (reponse != 0)
+                try
+                { 
+                    reponse = Convert.ToInt32(Console.ReadLine());
+                    if (reponse > 2 || reponse < 1)
+                    {
+                        Console.WriteLine("Invalid option! \n Please try again.");
+                        reponse = 0;
+                    }
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Invalid input\n Please try again");
+                }
+        }
+        else
+        {
+            gameEnded = true;
+        }
+
+    }
+
+    public void EndGame()
+    {
+        gameEnded = true;
+        
     }
     
     //Executes every frame, updating the list of current objects that will be displayed. 
@@ -180,5 +227,10 @@ public class GameField
     {
         activeEntities.Remove(instance);
         PopulateGameArray();
+    }
+
+    public bool GameIsRunning()
+    {
+        return !gameEnded;
     }
 }
