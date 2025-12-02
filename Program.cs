@@ -3,31 +3,25 @@ class Program
 {
     //Single shared AccountFactory instance
     private static AccountFactory AccountFactory = new AccountFactory();
+    private static IAccount currentPlayer;
+    private static LeaderBoard leaderBoard;
+    private static GameField gameField;
+    private static Controller playerController;
     static void Main(string[] args)
     {
         
-        LeaderBoard leaderBoard = new LeaderBoard();
+        leaderBoard = new LeaderBoard();
         foreach (var score in ScoreFileStorage.LoadScores())
         {
             leaderBoard.AddScore(score);
         }
         
-        IAccount currentPlayer = RunLoginMenu();
-
-        GameField gameField = GameField.GetGameInstance();
-        Controller playerController = new Controller();
-        // main menu will go here
-        RunMainMenu();
-        gameField.StartGame(playerController);
+        currentPlayer = RunLoginMenu();
         TempScoreLoggingDemo(leaderBoard, currentPlayer);
-        // temporary section - when bryan implements the health functionality
-        // and how the game ends, all temp should change
-        
-
-        while (gameField.GameIsRunning())
-        {
-            gameField.RunGame();
-        }
+        gameField = GameField.GetGameInstance();
+        playerController = new Controller();
+        // main menu
+        RunMainMenu();
     }
     
 
@@ -131,14 +125,100 @@ class Program
 
             switch (input)
             {
+
                 case "1":
                     //call for game start
-                    //gameField.RunGame();
+                    gameField.StartGame(playerController);
+        
+
+                    while (gameField.GameIsRunning())
+                    {
+                        gameField.RunGame();
+                    }
+                    while (Console.KeyAvailable)
+                        Console.ReadKey(true);
                     break;
 
                 case "2":
-                    //call display leaderboard
-                    //leaderBoard.Display();
+                    //Leaderboard menu
+                    bool inLeaderBoard = true;
+
+                    while (inLeaderBoard)
+                    {
+                        Console.WriteLine("1. Display Your Scores");
+                        Console.WriteLine("2. Display All Scores");
+                        Console.WriteLine("3. Display Score by Index");
+                        Console.WriteLine("4. Display Leaderboard with capped # of results");
+                        Console.WriteLine("5. Exit");
+            
+                        string? leaderBoardInput = Console.ReadLine();
+
+                        switch (leaderBoardInput)
+                        {
+
+                            case "1":
+                                //call for game start
+                                var localScores = leaderBoard.GetLocalScores(currentPlayer.Id);
+
+                                Console.WriteLine("Your Scores:");
+                                foreach (var s in localScores)
+                                {
+                                    Console.WriteLine($"{s.Username} : {s.ScoreCount}");
+                                }
+
+                                break;
+
+                            case "2":
+                                //All scores
+                                var allScores = leaderBoard.GetTopScores();
+
+                                Console.WriteLine("All Scores:");
+                                foreach (var s in allScores)
+                                {
+                                    Console.WriteLine($"{s.Username} : {s.ScoreCount}");
+                                }
+                                break;
+                            case "3":
+                                //Leaderboard by index in ordered list by top score
+                                Console.WriteLine("Enter an index (int) ");
+            
+                                int index = int.Parse(Console.ReadLine());
+                                var score = leaderBoard.GetScore(index);
+
+                                if (score != null)
+                                {
+                                    Console.WriteLine($"{score.Username} : {score.ScoreCount}");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid index.");
+                                }
+
+                                break;
+                            case "4":
+                                //Leaderboard with cap
+                                Console.WriteLine("Enter a number(cap) (int) ");
+            
+                                int thing = int.Parse(Console.ReadLine());
+                                var topScores = leaderBoard.GetTopScores(thing);
+
+                                Console.WriteLine($"Top {thing} Scores:");
+                                foreach (var s in topScores)
+                                {
+                                    Console.WriteLine($"{s.Username} : {s.ScoreCount}");
+                                }
+
+                                break;
+                            //exit
+                            case "5": 
+                                inLeaderBoard = false;
+                                break;
+
+                            default:
+                                Console.WriteLine("Invalid option.");
+                                break;
+                        }
+                    }
                     break;
                 //exit
                 case "3":

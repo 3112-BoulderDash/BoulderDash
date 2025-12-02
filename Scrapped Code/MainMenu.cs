@@ -20,25 +20,48 @@ public class MainMenu
 
             switch (input)
             {
+
                 case "1":
-                    //create account
-                    Console.Write("Enter username: ");
-                    string? username = Console.ReadLine();
-                    _accountFactory.CreateAccount(username);
-                        
+                    //call for game start
                     break;
 
                 case "2":
-                    //call for game start
-                    //gameField.RunGame();
-                    break;
+                    //Leaderboard menu
+                    bool inLeaderBoard = true;
 
-                case "3":
-                    //call display leaderboard
-                    //leaderBoard.Display();
+                    while (inLeaderBoard)
+                    {
+                        Console.WriteLine("1. Display your scores");
+                        Console.WriteLine("2. Displa All Scores");
+                        Console.WriteLine("3. Display Leaderboard");
+                        Console.WriteLine("4. Exit");
+            
+                        string? leaderBoardInput = Console.ReadLine();
+
+                        switch (leaderBoardInput)
+                        {
+
+                            case "1":
+                                //call for game start
+                                break;
+
+                            case "2":
+                                //Leaderboard menu
+                    
+                                break;
+                            //exit
+                            case "3":
+                                running = false;
+                                break;
+
+                            default:
+                                Console.WriteLine("Invalid option.");
+                                break;
+                        }
+                    }
                     break;
                 //exit
-                case "4":
+                case "3":
                     running = false;
                     break;
 
