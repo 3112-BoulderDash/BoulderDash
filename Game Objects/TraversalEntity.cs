@@ -43,7 +43,7 @@ public abstract class TraversalEntity
     //     MoveDown();
     // }
     
-    public abstract string DrawMe(); //Rename to RenderInstance, return an array. 
+    public abstract String[] GetSprite(); //Rename to RenderInstance, return an array. 
     
     public abstract void Step();  //Runs every tick by gamefield+
 }

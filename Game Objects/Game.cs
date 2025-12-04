@@ -1,9 +1,9 @@
 namespace Boulder_Dash;
 
-public class GameField
+public class Game
 {
     //Games instance, for singleton purposes 
-    private static GameField gameInstance = null;
+    private static Game gameInstance = null;
     private bool gamePaused;
     private bool gameEnded;
 
@@ -13,27 +13,27 @@ public class GameField
     private List<TraversalEntity> activeEntities = new List<TraversalEntity>(); //List of current entities in the game
 
     public int rowLength { get; } = 3;
-
     public int columnLength { get; } = 8;
     
+    //Replace with creation of game renderer
     //The Array that will be used to update the game
-    private TraversalEntity[,] gameArray;
+    private GameRenderer gameRenderer;
     
     private Clock gameClock = new Clock();
-    private int speedUpTime = 30;
-    private int speedUpTimer = 30;
+    private int speedUpTime = 5;
+    private int speedUpTimer = 5;
 
-    private GameField()
+    private Game()
     {
-        gameArray = new TraversalEntity[rowLength, columnLength];
+        gameRenderer = new GameRenderer(rowLength, columnLength);
         gamePaused = true;
         gameEnded = true;
     }
     
     //Get Game instance
-    public static GameField GetGameInstance()
+    public static Game GetGameInstance()
     {
-        if (gameInstance == null) gameInstance = new GameField();
+        if (gameInstance == null) gameInstance = new Game();
         return gameInstance;
     }
     
@@ -43,32 +43,36 @@ public class GameField
         if (gameEnded) gameEnded = false;
         if (gamePaused) gamePaused = false;
         //Reset Variables needed here
+        activeEntities = new List<TraversalEntity>();
+        gameRenderer = new GameRenderer(rowLength, columnLength);
+        gameRenderer.PopulateGameArray(activeEntities);
+             
+        obstacleSpawner = new ObstacleSpawner();
         
         //Create the Player character and give them the controller
-        //AddInstance();
         playerCar = new Car(1, columnLength-1, CarTypes.Ferrari, playerController);
         AddInstance(playerCar);
-        
-        obstacleSpawner = new ObstacleSpawner();
     }
 
     public void RunGame()
     {
         if (!gameEnded && !gamePaused)
         {
+            //Clear Screen
+            Console.Clear();
+            
             //Scan for player input 
             playerCar.ScanInputs();
 
             //Populates the game array that will be drawn.
-            PopulateGameArray();
+            gameRenderer.PopulateGameArray(activeEntities);
 
             //Render screen
-            Render();
-
-
+            gameRenderer.Render();
+            
             //pass time with Clock 
             gameClock.passTime();
-            //gameClock.TickSpeed = 15;
+            
             if (gameClock.hasTickOccured())
             {
                 //Run List of  functions
@@ -123,71 +127,6 @@ public class GameField
         
     }
     
-    //Executes every frame, updating the list of current objects that will be displayed. 
-    private void PopulateGameArray()
-    {
-        //Populate GameArray with empty slots 
-        for (int y = 0; y < columnLength; y++)
-        {
-            for (int x = 0; x < rowLength; x++)
-            {
-                //See if space is empty and fill with null if so
-                gameArray[x, y] = null;
-            }
-        }
-        
-        //Loop through active entities and add them
-        foreach (TraversalEntity e in activeEntities)
-        {
-            //If X and Y go out of bound then correct 
-            if (e.posX < 0) e.posX = 0;
-            if (e.posX >  rowLength - 1) e.posX = rowLength - 1;
-            if (e.posY < 0) e.posY = 0;
-            if (e.posY > columnLength - 1) e.posY = columnLength - 1;
-            
-            //IF this space has not been filled yet then we can fill it. 
-            if (gameArray[e.posX, e.posY] == null)
-            {
-                gameArray[e.posX, e.posY] = e;
-            }
-        }
-        
-    }
-    
-    //Executes every time game needs to update screen
-    private void Render()
-    {
-        Console.Clear();
-        Console.WriteLine("\x1b[3J");
-
-        //Create String were printing,
-        string screenString = "";
-
-        for (int col = 0; col < columnLength; col++) 
-        {
-            for (int row = 0; row < rowLength; row++)
-            {
-                if (gameArray[row, col] != null)
-                {
-                    //Update the string to space filled
-                    screenString += gameArray[row, col].DrawMe();
-                }
-                else
-                {
-                    screenString += "-";
-                }
-
-            }
-
-            //add new line char 
-            screenString += "\n";
-        }
-
-        //Print string 
-        Console.WriteLine(screenString);
-
-        Console.WriteLine("HP: " + playerCar.HealthPoints);
-    }
 
     //Runs all the other instances code, Executes every tick. 
     private void InstanceStep()
@@ -210,7 +149,7 @@ public class GameField
         //Put instance in new space, 
         //Insert Instance by adding to the actives list and then run populate game array
         activeEntities.Add(instance);
-        PopulateGameArray();
+        gameRenderer.PopulateGameArray(activeEntities);
         
         //also Many objects need to be able to reference game field, maybe it should be a singleton?
     }
@@ -219,14 +158,17 @@ public class GameField
     {
         //If X and Y go out of bounds then return null.
         if (x < 0 || x >  rowLength - 1 || y < 0 || y >  columnLength - 1 ) return null;
-        
-        return gameArray[x, y];
+        foreach (TraversalEntity e in activeEntities)
+        {
+            if (e.posX == x && e.posY == y) return e;
+        }
+        return null;
     }
 
     public void RemoveInstance(TraversalEntity instance)
     {
         activeEntities.Remove(instance);
-        PopulateGameArray();
+        gameRenderer.PopulateGameArray(activeEntities);
     }
 
     public bool GameIsRunning()

@@ -17,27 +17,31 @@ public class Obstacles : TraversalEntity
     {
         MoveDown();
     }
-    public override String DrawMe()
+    public override String[] GetSprite()
     {
-      //  throw new NotImplementedException();
-      return "2";
+        return new string[]
+        {
+            " 8 ",
+            "888",
+            "888"
+        };
     }
 
     public override void Step()
     {
         //Check if we are meeting with a car
-        GameField gameField = GameField.GetGameInstance();
-        TraversalEntity entity = gameField.getInstanceAtPosition(posX, posY + 1);
+        Game game = Game.GetGameInstance();
+        TraversalEntity entity = game.getInstanceAtPosition(posX, posY + 1);
         
         Car playerCar = entity as Car;
         if (playerCar != null)
         {
             playerCar.HealthPoints--;
-            gameField.RemoveInstance(this);
+            game.RemoveInstance(this);
         }
         
         //Check if we are going to move off grid if so DELETE ourselves 
-        if (posY + 1 >= gameField.columnLength) gameField.RemoveInstance(this);
+        if (posY + 1 >= game.columnLength) game.RemoveInstance(this);
         
         //If we are at the bottom then delete self, use the gamefield array sizes to figure this out. WHEN it becomes a signleton
         MoveDown();

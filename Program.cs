@@ -5,7 +5,7 @@ class Program
     private static AccountFactory AccountFactory = new AccountFactory();
     private static IAccount currentPlayer;
     private static LeaderBoard leaderBoard;
-    private static GameField gameField;
+    private static Game _game;
     private static Controller playerController;
     static void Main(string[] args)
     {
@@ -18,7 +18,7 @@ class Program
         
         currentPlayer = RunLoginMenu();
         TempScoreLoggingDemo(leaderBoard, currentPlayer);
-        gameField = GameField.GetGameInstance();
+        _game = Game.GetGameInstance();
         playerController = new Controller();
         // main menu
         RunMainMenu();
@@ -128,12 +128,12 @@ class Program
 
                 case "1":
                     //call for game start
-                    gameField.StartGame(playerController);
+                    _game.StartGame(playerController);
         
 
-                    while (gameField.GameIsRunning())
+                    while (_game.GameIsRunning())
                     {
-                        gameField.RunGame();
+                        _game.RunGame();
                     }
                     while (Console.KeyAvailable)
                         Console.ReadKey(true);

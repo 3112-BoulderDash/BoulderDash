@@ -23,11 +23,17 @@ public class Car : TraversalEntity
         if (controller.IsKeyDown(KeyCode.Right)) 
             posX++;
     }
-    public override String DrawMe()
+
+    public override String[] GetSprite()
     {
-        //throw new NotImplementedException();
-        return "1";
+        return new string[]
+        {
+            "0-0",
+            "| |",
+            "==="
+        };
     }
+
     public override void CollisionAction(TraversalEntity Tentity)
     {
         throw new NotImplementedException();
