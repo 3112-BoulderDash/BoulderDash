@@ -385,7 +385,7 @@ class Program
                         string? pointsInput = Console.ReadLine();
                         if (int.TryParse(pointsInput, out int points) && points > 0)
                         {
-                            IScoreCard card = new ScoreCard(currentPlayer.Username, points);
+                            IScoreCard card = new ScoreCard(currentPlayer.Id, points);
                             leaderBoard.AddScore(card);
                             ScoreFileStorage.AppendScore(card);
 
