@@ -85,7 +85,7 @@ class Program
                     Console.ReadKey(true);
                 }
             }
-            else if (choice == "3")   // 🔹 CREATE ADMIN ACCOUNT
+            else if (choice == "3") 
             {
                 Console.Write("Choose an ADMIN username: ");
                 string username = Console.ReadLine() ?? string.Empty;
@@ -113,36 +113,6 @@ class Program
             }
         }
     }
-
-    // temp score logging, logic should stay similar once end to game loop is created.
-    private static void TempScoreLoggingDemo(LeaderBoard leaderBoard, IAccount currentPlayer)
-    {
-        Console.Clear();
-        Console.WriteLine($"Logged in as: {currentPlayer.Username} (ID {currentPlayer.Id})");
-        Console.WriteLine("Enter a test score to log for this player, or just press Enter to skip:");
-        string? input = Console.ReadLine();
-
-        if (int.TryParse(input, out int score))
-        {
-            IScoreCard card = new ScoreCard(currentPlayer.Username, score);
-
-            // add to in-memory leaderboard
-            leaderBoard.AddScore(card);
-
-            // append to scores.txt
-            ScoreFileStorage.AppendScore(card);
-
-            Console.WriteLine("Score saved to leaderboard and scores.txt.");
-        }
-        else
-        {
-            Console.WriteLine("No score logged (skipped).");
-        }
-
-        Console.WriteLine("Press any key to start the game...");
-        Console.ReadKey(true);
-    }
-
     //main menu
    public static void RunMainMenu()
     {
@@ -309,7 +279,7 @@ class Program
         }
     }
 
-    // 🔹 Admin-only settings menu
+    // Admin-only settings menu
     private static void RunSettingsMenu()
     {
         if (!currentPlayer.IsAdmin)
