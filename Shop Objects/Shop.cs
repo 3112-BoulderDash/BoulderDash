@@ -16,7 +16,8 @@ public class Shop
         Console.WriteLine("Welcome to the shop!");
         foreach (var item in ShopSkins)
         {
-            Console.WriteLine($"{choice}. {item.name}");
+            ShopDisplay row =  new ShopDisplay(item.name, item.price);
+            Console.WriteLine($"{choice}. {row.Name} - {row.Price}");
             choice++;
         }
     }
