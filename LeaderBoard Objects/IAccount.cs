@@ -9,4 +9,5 @@ public interface IAccount {
     
     List<ISkin> PlayerSkins { get; set; }
     Boolean IsAdmin { get; }
+    int TotalPoints { get; set; }
 }

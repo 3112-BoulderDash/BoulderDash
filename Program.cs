@@ -57,13 +57,25 @@ class Program
 
                 if (account != null)
                 {
+                    var localScores = leaderBoard.GetLocalScores(account.Username);
+                    int total = 0;
+                    foreach (var s in localScores)
+                    {
+                        total += s.ScoreCount;
+                    }
+                    account.TotalPoints = total;
+
                     Console.WriteLine($"Welcome back, {account.Username} (ID {account.Id})!");
-                    Console.WriteLine("Press any key to continue...");
+                    Console.WriteLine($"Your total points: {account.TotalPoints}");
+                    Console.WriteLine("Press a key to continue...");
                     Console.ReadKey(true);
                     return account;
                 }
-                Console.WriteLine("No account with that username. Press any key to return to menu.");
-                Console.ReadKey(true);
+                else
+                {
+                    Console.WriteLine("No account found. Press any key to return to menu.");
+                    Console.ReadKey(true);
+                }
             }
             else if (choice == "2")
             {
@@ -81,7 +93,7 @@ class Program
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Could not create account: {ex.Message}");
-                    Console.WriteLine("Press any key to return and retry.");
+                    Console.WriteLine("Press a key and retry.");
                     Console.ReadKey(true);
                 }
             }
@@ -144,6 +156,23 @@ class Program
                     }
                     while (Console.KeyAvailable)
                         Console.ReadKey(true);
+
+                    // log the score from game
+                    int finalScore = _game.Score;
+
+                    if (finalScore > 0)
+                    {
+                        currentPlayer.TotalPoints += finalScore;
+                        IScoreCard card = new ScoreCard(currentPlayer.Username, finalScore);
+                        leaderBoard.AddScore(card);
+                        ScoreFileStorage.AppendScore(card);
+
+                        Console.WriteLine($"Game over! You earned {finalScore} points this run.");
+                        Console.WriteLine($"Your new total points: {currentPlayer.TotalPoints}");
+                        Console.WriteLine("Press any key to return to the main menu...");
+                        Console.ReadKey(true);
+                    }
+
                     break;
 
                 case "2":
@@ -293,7 +322,7 @@ class Program
             Console.WriteLine("==== Admin Settings ====");
             Console.WriteLine($"Admin: {currentPlayer.Username}");
             Console.WriteLine("1. Give myself points");
-            Console.WriteLine("2. Contol Difficulty");
+            Console.WriteLine("2. Control Difficulty");
             Console.WriteLine("3. Back to main menu");
 
             string? input = Console.ReadLine();
@@ -308,6 +337,8 @@ class Program
                         IScoreCard card = new ScoreCard(currentPlayer.Username, points);
                         leaderBoard.AddScore(card);
                         ScoreFileStorage.AppendScore(card);
+
+                        currentPlayer.TotalPoints += points;
 
                         Console.WriteLine($"Gave {currentPlayer.Username} {points} points.");
                     }

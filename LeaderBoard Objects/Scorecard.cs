@@ -6,7 +6,7 @@ public class ScoreCard : IScoreCard
     public string Username { get; private set; } 
     public int ScoreCount { get; private set; }
 
-    // 🔹 Used when you have both Id + username
+    // Used when you have both Id + username
     public ScoreCard(int playerId, int scoreCount, string username)
     {
         PlayerId = playerId;
