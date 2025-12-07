@@ -49,6 +49,8 @@ public class Shop
             Console.ReadKey();
             return false;
         }
+        
+        account.TotalPoints -= selectedItem.price;
 
         //add item to player inventory
         account.PlayerSkins.Add(selectedItem);
