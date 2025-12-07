@@ -10,9 +10,13 @@ public class Game
     private ObstacleSpawner obstacleSpawner;
     private List<TraversalEntity> activeEntities = new List<TraversalEntity>(); //List of current entities in the game
     public static Controller playerController = new Controller();
+    public int Score { get; set; }
+    
+    
     public int rowLength { get; } = 3;
     public static  int columnLength { get; } = 8;
     public static Car playerCar = new Car(1, columnLength-1, CarTypes.Ferrari, playerController);
+    
     //Replace with creation of game renderer
     //The Array that will be used to update the game
     private GameRenderer gameRenderer;
@@ -26,6 +30,7 @@ public class Game
         gameRenderer = new GameRenderer(rowLength, columnLength);
         gamePaused = true;
         gameEnded = true;
+        Score = 0;
     }
     
     //Get Game instance
@@ -40,6 +45,8 @@ public class Game
     {
         if (gameEnded) gameEnded = false;
         if (gamePaused) gamePaused = false;
+        Score = 0;
+        
         //Reset Variables needed here
         activeEntities = new List<TraversalEntity>();
         gameRenderer = new GameRenderer(rowLength, columnLength);
@@ -65,7 +72,7 @@ public class Game
             gameRenderer.PopulateGameArray(activeEntities);
 
             //Render screen
-            gameRenderer.Render();
+            gameRenderer.Render(playerCar.HealthPoints, Score);
             
             //pass time with Clock 
             gameClock.passTime();
@@ -83,6 +90,9 @@ public class Game
 
                 //Spawn Obstacles / Tick for obstacle creation
                 obstacleSpawner.RequestObstacles();
+                
+                //Increase Score 
+                Score += 1 * (60/gameClock.TickSpeed);
             }
             //Console.WriteLine(gameClock.);
 

@@ -21,9 +21,9 @@ public class Obstacles : TraversalEntity
     {
         return new string[]
         {
-            " 8 ",
-            "888",
-            "888"
+            "  8  ",
+            " 888 ",
+            "88888"
         };
     }
 

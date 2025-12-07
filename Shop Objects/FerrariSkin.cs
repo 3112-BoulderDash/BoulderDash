@@ -6,8 +6,8 @@ public class FerrariSkin : ISkin
     public int price { get; } = 300;
     public string[] Sprite => new[]
     {
-        "0-0",
+        "0F0",
         "| |",
-        "FFF"
+        "=F="
     };
 }

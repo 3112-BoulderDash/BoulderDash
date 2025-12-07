@@ -47,7 +47,7 @@ public class GameRenderer
     
     public int drawLength = 3;
     //Executes every time game needs to update screen
-    public void Render()
+    public void Render(int health, int scoreNum)
     {
 
         //Create String were printing,
@@ -67,7 +67,7 @@ public class GameRenderer
                     }
                     else
                     {
-                        screenString += "   ";
+                        screenString += "     ";
                     }
 
                 }
@@ -81,5 +81,6 @@ public class GameRenderer
 
         //Print string 
         Console.WriteLine(screenString);
+        Console.WriteLine("HP: " +  health +  "\nScore: " + scoreNum );
     }
 }

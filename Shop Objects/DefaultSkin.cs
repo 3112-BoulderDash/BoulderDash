@@ -6,8 +6,8 @@ public class DefaultSkin : ISkin
     public int price { get; } = 0;
     public string[] Sprite => new[]
     {
-        "0-0",
-        "| |",
-        "==="
+        "[*=*]",
+        " | | ",
+        "[|_|]"
     };
 }
