@@ -9,11 +9,13 @@ class Program
     private static Shop shop = new Shop();
     static void Main(string[] args)
     { 
+        AccountFileStorage.LoadAccounts(AccountFactory);
         leaderBoard = new LeaderBoard();
-        foreach (var score in ScoreFileStorage.LoadScores())
+        foreach (var score in ScoreFileStorage.LoadScores(AccountFactory))
         {
             leaderBoard.AddScore(score);
         }
+
         _game = Game.GetGameInstance();
         bool exitApplication = false;
         while (!exitApplication)
@@ -30,7 +32,10 @@ class Program
 
             // main menu returns to login menu if logout occurs
             RunMainMenu();
-        }
+            
+        }            
+        AccountFileStorage.SaveAccounts(AccountFactory);
+
     }
     
 
@@ -165,7 +170,7 @@ class Program
                     {
                         //Add points to account
                         currentPlayer.TotalPoints += finalScore;
-                        IScoreCard card = new ScoreCard(currentPlayer.Username, finalScore);
+                        IScoreCard card = new ScoreCard(currentPlayer.Id, finalScore, currentPlayer.Username);
                         leaderBoard.AddScore(card);
                         ScoreFileStorage.AppendScore(card);
 
@@ -214,8 +219,7 @@ class Program
                                 Console.WriteLine("Your Scores:");
                                 foreach (var s in localScores)
                                 {
-                                    Console.WriteLine($"{s.Username} : {s.ScoreCount}");
-                                }
+                                    Console.WriteLine($"ID {s.PlayerId} | {s.Username} : {s.ScoreCount}");                                }
 
 
                                 break;
@@ -227,8 +231,7 @@ class Program
                                 Console.WriteLine("All Scores:");
                                 foreach (var s in allScores)
                                 {
-                                    Console.WriteLine($"{s.Username} : {s.ScoreCount}");
-                                }
+                                    Console.WriteLine($"ID {s.PlayerId} | {s.Username} : {s.ScoreCount}");                                }
                                 break;
                             case "3":
                                 //Leaderboard by index in ordered list by top score
@@ -239,7 +242,7 @@ class Program
 
                                 if (score != null)
                                 {
-                                    Console.WriteLine($"{score.Username} : {score.ScoreCount}");
+                                    Console.WriteLine($"ID {score.PlayerId} | {score.Username} : {score.ScoreCount}");
                                 }
                                 else
                                 {
@@ -257,7 +260,7 @@ class Program
                                 Console.WriteLine($"Top {thing} Scores:");
                                 foreach (var s in topScores)
                                 {
-                                    Console.WriteLine($"{s.Username} : {s.ScoreCount}");
+                                    Console.WriteLine($"ID {s.PlayerId} | {s.Username} : {s.ScoreCount}");
                                 }
 
                                 break;
@@ -355,7 +358,7 @@ class Program
                     string? pointsInput = Console.ReadLine();
                     if (int.TryParse(pointsInput, out int points) && points > 0)
                     {
-                        IScoreCard card = new ScoreCard(currentPlayer.Username, points);
+                        IScoreCard card = new ScoreCard(currentPlayer.Id, points, currentPlayer.Username);
                         leaderBoard.AddScore(card);
                         ScoreFileStorage.AppendScore(card);
 

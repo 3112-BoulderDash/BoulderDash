@@ -85,6 +85,33 @@ public class AccountFactory
         }
 
         return null;
+    }public IAccount? FindById(int id)
+    {
+        foreach (var account in _accounts)
+        {
+            if (account.Id == id)
+                return account;
+        }
+        return null;
     }
-    
+
+    public void CreateAccountFromFile(int id, string username, bool isAdmin)
+    {
+        if (FindById(id) != null)
+            return;
+        
+        IAccount account;
+        if (isAdmin)
+            account = new AdminAccount(username, id);
+        else
+            account = new Account(username, id);
+        _accounts.Add(account);
+
+        if (id >= _nextId)
+            _nextId = id + 1;
+    } 
+    public IReadOnlyList<IAccount> GetAllAccounts()
+    {
+        return _accounts.AsReadOnly();
+    }
 }
