@@ -41,7 +41,7 @@ public class Obstacles : TraversalEntity
         }
         
         //Check if we are going to move off grid if so DELETE ourselves 
-        if (posY + 1 >= game.columnLength) game.RemoveInstance(this);
+        if (posY + 1 >= Game.columnLength) game.RemoveInstance(this);
         
         //If we are at the bottom then delete self, use the gamefield array sizes to figure this out. WHEN it becomes a signleton
         MoveDown();

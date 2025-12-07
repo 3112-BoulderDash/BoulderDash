@@ -6,15 +6,13 @@ public class Game
     private static Game gameInstance = null;
     private bool gamePaused;
     private bool gameEnded;
-
-
-    private Car playerCar;
+    
     private ObstacleSpawner obstacleSpawner;
     private List<TraversalEntity> activeEntities = new List<TraversalEntity>(); //List of current entities in the game
-
+    public static Controller playerController = new Controller();
     public int rowLength { get; } = 3;
-    public int columnLength { get; } = 8;
-    
+    public static  int columnLength { get; } = 8;
+    public static Car playerCar = new Car(1, columnLength-1, CarTypes.Ferrari, playerController);
     //Replace with creation of game renderer
     //The Array that will be used to update the game
     private GameRenderer gameRenderer;
@@ -38,7 +36,7 @@ public class Game
     }
     
     //Game functions
-    public void StartGame(Controller playerController)
+    public void StartGame()
     {
         if (gameEnded) gameEnded = false;
         if (gamePaused) gamePaused = false;
@@ -50,7 +48,6 @@ public class Game
         obstacleSpawner = new ObstacleSpawner();
         
         //Create the Player character and give them the controller
-        playerCar = new Car(1, columnLength-1, CarTypes.Ferrari, playerController);
         AddInstance(playerCar);
     }
 

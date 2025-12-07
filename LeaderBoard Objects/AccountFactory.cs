@@ -10,11 +10,17 @@ public class AccountFactory
     {
         public string Username { get; set; }
         public int Id { get; set; }
+        
+        public List<ISkin> PlayerSkins { get; set; }
 
         public Account(string username, int id)
         {
             Username = username;
             Id = id;
+            //Account Skin inventory
+            PlayerSkins = new List<ISkin>();
+            //all accounts should have default skin in inventory
+            PlayerSkins.Add(new DefaultSkin());
         }
     }
     
@@ -46,4 +52,5 @@ public class AccountFactory
 
         return null;
     }
+    
 }

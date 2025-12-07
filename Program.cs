@@ -6,7 +6,7 @@ class Program
     private static IAccount currentPlayer;
     private static LeaderBoard leaderBoard;
     private static Game _game;
-    private static Controller playerController;
+    private static Shop shop = new Shop();
     static void Main(string[] args)
     {
         
@@ -17,9 +17,8 @@ class Program
         }
         
         currentPlayer = RunLoginMenu();
-        TempScoreLoggingDemo(leaderBoard, currentPlayer);
+        //TempScoreLoggingDemo(leaderBoard, currentPlayer);
         _game = Game.GetGameInstance();
-        playerController = new Controller();
         // main menu
         RunMainMenu();
     }
@@ -119,7 +118,9 @@ class Program
         {
             Console.WriteLine("1. Start Game");
             Console.WriteLine("2. Display Leaderboard");
-            Console.WriteLine("3. Exit");
+            Console.WriteLine("3. Shop");
+            Console.WriteLine("4. Equip Item");
+            Console.WriteLine("5. Exit");
             
             string? input = Console.ReadLine();
 
@@ -128,7 +129,7 @@ class Program
 
                 case "1":
                     //call for game start
-                    _game.StartGame(playerController);
+                    _game.StartGame();
         
 
                     while (_game.GameIsRunning())
@@ -220,8 +221,35 @@ class Program
                         }
                     }
                     break;
-                //exit
+                
                 case "3":
+                    shop.DisplayMenu();
+                    shop.BoughtItem(currentPlayer);
+                    break;
+                case "4":
+                    int choice = 1;
+                    Console.WriteLine("Welcome to the shop!");
+                    foreach (var item in currentPlayer.PlayerSkins)
+                    {
+                        Console.WriteLine($"{choice}. {item.name}");
+                        choice++;
+                    }
+                    Console.WriteLine("Enter the number of the item to buy:");
+                    string? itemchoice = Console.ReadLine();
+                    if (!int.TryParse(itemchoice, out int option))
+                    {
+                        Console.WriteLine("Invalid input.");
+                    }
+                    ISkin selectedItem = currentPlayer.PlayerSkins[option - 1];
+                    
+                    Game.playerCar.EquipSkin(selectedItem);
+
+                    //add item to player inventory
+                    
+                    
+                    break;
+                //exit
+                case "5":
                     running = false;
                     break;
 
@@ -232,6 +260,4 @@ class Program
         }
     }
 }
-
-
 
