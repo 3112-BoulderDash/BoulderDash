@@ -24,7 +24,7 @@ public class Shop
 
     public bool BoughtItem(IAccount account)
     {
-        Console.WriteLine("Enter the number of the item to buy:");
+        Console.WriteLine("Enter the number of the item you want to buy:");
         string? input = Console.ReadLine();
 
         if (!int.TryParse(input, out int choice))
@@ -43,13 +43,12 @@ public class Shop
         
         //checks to see if player has enough currency
         //commented out until we have currency associated with account
-        /*
-        if (selectedItem.price > account.Currency)
+        if (selectedItem.price > account.TotalPoints)
         {
-            Console.WriteLine("You don't have enough currency to buy this item.");
+            Console.WriteLine("You don't have enough points to buy this item.");
+            Console.ReadKey();
             return false;
         }
-        */
 
         //add item to player inventory
         account.PlayerSkins.Add(selectedItem);

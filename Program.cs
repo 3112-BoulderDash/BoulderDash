@@ -279,7 +279,7 @@ class Program
                     shop.BoughtItem(currentPlayer);
                     break;
                 
-                //Equip Item
+                //The Garage
                 case "4":
                     int choice = 1;
                     Console.WriteLine("Welcome to your garage!");
