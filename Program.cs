@@ -8,19 +8,29 @@ class Program
     private static Game _game;
     private static Shop shop = new Shop();
     static void Main(string[] args)
-    {
-        
+    { 
         leaderBoard = new LeaderBoard();
         foreach (var score in ScoreFileStorage.LoadScores())
         {
             leaderBoard.AddScore(score);
         }
-        
-        currentPlayer = RunLoginMenu();
-        //TempScoreLoggingDemo(leaderBoard, currentPlayer);
         _game = Game.GetGameInstance();
-        // main menu
-        RunMainMenu();
+        bool exitApplication = false;
+        while (!exitApplication)
+        {
+            // Login screen
+            IAccount? account = RunLoginMenu();
+
+            if (account == null)
+            {
+                exitApplication = true;
+                break;
+            }
+            currentPlayer = account;
+
+            // main menu returns to login menu if logout occurs
+            RunMainMenu();
+        }
     }
     
 
@@ -33,7 +43,10 @@ class Program
             Console.WriteLine("____ Boulder Dash ___");
             Console.WriteLine("1) Login");
             Console.WriteLine("2) Create account");
-            Console.Write("Select 1 or 2: ");
+            Console.WriteLine("3) Create ADMIN");
+            Console.WriteLine("Exit");
+
+            Console.Write("Enter 1,2,3 or any other key to exit: ");
             string? choice = Console.ReadLine();
 
             if (choice == "1")
@@ -72,10 +85,31 @@ class Program
                     Console.ReadKey(true);
                 }
             }
+            else if (choice == "3")   // 🔹 CREATE ADMIN ACCOUNT
+            {
+                Console.Write("Choose an ADMIN username: ");
+                string username = Console.ReadLine() ?? string.Empty;
+
+                try
+                {
+                    IAccount account = AccountFactory.CreateAdminAccount(username);
+                    Console.WriteLine($"ADMIN account successfully created! Username: {account.Username}, ID: {account.Id}");
+                    Console.WriteLine("Press anything to navigate to menu:");
+                    Console.ReadKey(true);
+                    return account;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Sorry couldn't create admin account: {ex.Message}");
+                    Console.WriteLine("Press any key to return and retry.");
+                    Console.ReadKey(true);
+                }
+            }
             else
             {
-                Console.WriteLine("Invalid choice. Press any key to return to menu.");
+                Console.WriteLine("Closing Boulder Dash.");
                 Console.ReadKey(true);
+                return null; 
             }
         }
     }
@@ -120,7 +154,9 @@ class Program
             Console.WriteLine("2. Display Leaderboard");
             Console.WriteLine("3. Shop");
             Console.WriteLine("4. Equip Item");
-            Console.WriteLine("5. Exit");
+            Console.WriteLine("5. Logout");
+            Console.WriteLine("6. Settings (Admin only)");
+
             
             string? input = Console.ReadLine();
 
@@ -151,21 +187,21 @@ class Program
                         Console.WriteLine("3. Display Score by Index");
                         Console.WriteLine("4. Display Leaderboard with capped # of results");
                         Console.WriteLine("5. Exit");
-            
                         string? leaderBoardInput = Console.ReadLine();
 
                         switch (leaderBoardInput)
                         {
 
                             case "1":
-                                //call for game start
-                                var localScores = leaderBoard.GetLocalScores(currentPlayer.Id);
+                                
+                                var localScores = leaderBoard.GetLocalScores(currentPlayer.Username);
 
                                 Console.WriteLine("Your Scores:");
                                 foreach (var s in localScores)
                                 {
                                     Console.WriteLine($"{s.Username} : {s.ScoreCount}");
                                 }
+
 
                                 break;
 
@@ -252,12 +288,80 @@ class Program
                 case "5":
                     running = false;
                     break;
+                case "6":
+                    if (currentPlayer.IsAdmin)
+                    {
+                        RunSettingsMenu();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Sorry you need to be an admin in order to access settings.");
+                        Console.WriteLine("Press to return to menu:");
+                        Console.ReadKey(true);
+                    }
+                    break;
+
+                default:
+                    Console.WriteLine("Please select a valid option.");
+                    Console.ReadKey(true);
+                    break;
+            }
+        }
+    }
+
+    // 🔹 Admin-only settings menu
+    private static void RunSettingsMenu()
+    {
+        if (!currentPlayer.IsAdmin)
+            return;
+
+        bool inSettings = true;
+
+        while (inSettings)
+        {
+            Console.Clear();
+            Console.WriteLine("==== Admin Settings ====");
+            Console.WriteLine($"Admin: {currentPlayer.Username}");
+            Console.WriteLine("1. Give myself points");
+            Console.WriteLine("2. Contol Difficulty");
+            Console.WriteLine("3. Back to main menu");
+
+            string? input = Console.ReadLine();
+
+            switch (input)
+            {
+                case "1":
+                    Console.Write("Enter number of points to give yourself: ");
+                    string? pointsInput = Console.ReadLine();
+                    if (int.TryParse(pointsInput, out int points) && points > 0)
+                    {
+                        IScoreCard card = new ScoreCard(currentPlayer.Username, points);
+                        leaderBoard.AddScore(card);
+                        ScoreFileStorage.AppendScore(card);
+
+                        Console.WriteLine($"Gave {currentPlayer.Username} {points} points.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid points value.");
+                    }
+                    Console.WriteLine("Press any key to return...");
+                    Console.ReadKey(true);
+                    break;
+                case "2":
+                    //not implemented yet. 
+                    Console.Write("Select difficulty: ");
+                    break;
+                case "3":
+                    inSettings = false;
+                    break;
 
                 default:
                     Console.WriteLine("Invalid option.");
+                    Console.WriteLine("Press any key to return...");
+                    Console.ReadKey(true);
                     break;
             }
         }
     }
 }
-

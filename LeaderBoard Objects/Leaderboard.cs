@@ -44,11 +44,11 @@ public class LeaderBoard
             .ToList();
     }
 
-    /// return all scores for a specific player by using linq keyword where.
-    public List<IScoreCard> GetLocalScores(int userId)
+    /// return all scores for logged in player
+    public List<IScoreCard> GetLocalScores(string username)
     {
         return _scores
-            .Where(s => s.PlayerId == userId)
+            .Where(s => s.Username == username)   // simple equality
             .OrderByDescending(s => s.ScoreCount)
             .ToList();
     }

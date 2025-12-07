@@ -8,4 +8,5 @@ public interface IAccount {
     int Id { get; set; }
     
     List<ISkin> PlayerSkins { get; set; }
+    Boolean IsAdmin { get; }
 }

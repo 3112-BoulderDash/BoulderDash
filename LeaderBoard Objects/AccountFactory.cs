@@ -12,6 +12,7 @@ public class AccountFactory
         public int Id { get; set; }
         
         public List<ISkin> PlayerSkins { get; set; }
+        public bool IsAdmin => false;
 
         public Account(string username, int id)
         {
@@ -23,7 +24,23 @@ public class AccountFactory
             PlayerSkins.Add(new DefaultSkin());
         }
     }
-    
+    // admin account
+    private class AdminAccount : IAccount
+    {
+        public string Username { get; set; }
+        public int Id { get; set; }
+        public List<ISkin> PlayerSkins { get; set; }
+        public bool IsAdmin => true;
+
+        public AdminAccount(string username, int id)
+        {
+            Username = username;
+            Id = id;
+            PlayerSkins = new List<ISkin>();
+            PlayerSkins.Add(new DefaultSkin());
+        }
+    }
+
     public IAccount CreateAccount(string username)
     {
         if (string.IsNullOrWhiteSpace(username))
@@ -34,6 +51,17 @@ public class AccountFactory
 
         int id = _nextId++;
         var account = new Account(username, id);
+        _accounts.Add(account);
+        return account;          // returns as IAccount
+    }
+    public IAccount CreateAdminAccount(string username)
+    {
+        if (string.IsNullOrWhiteSpace(username))
+            throw new ArgumentException("Username cannot be null or whitespace.", nameof(username));
+        if (FindByUsername(username) != null)
+            throw new InvalidOperationException("That username is already taken.");
+        int id = _nextId++;
+        var account = new AdminAccount(username, id);
         _accounts.Add(account);
         return account;          // returns as IAccount
     }
