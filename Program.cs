@@ -1,4 +1,6 @@
-﻿namespace Boulder_Dash;
+﻿using System.Diagnostics;
+
+namespace Boulder_Dash;
 class Program
 {
     //Single shared AccountFactory instance
@@ -346,7 +348,7 @@ class Program
             Console.WriteLine("==== Admin Settings ====");
             Console.WriteLine($"Admin: {currentPlayer.Username}");
             Console.WriteLine("1. Give myself points");
-            Console.WriteLine("2. Control Difficulty");
+            Console.WriteLine("2. Modify Game/ Reset Variables");
             Console.WriteLine("3. Back to main menu");
 
             string? input = Console.ReadLine();
@@ -374,8 +376,60 @@ class Program
                     Console.ReadKey(true);
                     break;
                 case "2":
-                    //not implemented yet. 
-                    Console.Write("Select difficulty: ");
+                    bool confirmed = false;
+                    while (!confirmed)
+                    {
+                        //You should be able to loop through these options till you are satisified
+                        Console.WriteLine("Available modifications");
+                        Console.WriteLine("1) Change Grid Width");
+                        Console.WriteLine("2) Change Grid Height");
+                        Console.WriteLine("3) Change Start Tick Speed");
+                        Console.WriteLine("4) Change Mimimum Tick Speed");
+                        Console.WriteLine("5) Change Speed Up Time");
+                        Console.WriteLine("6) Reset Variables");
+                        Console.WriteLine("7) Confirm Choices");
+
+                        int choice = int.Parse(Console.ReadLine());
+                        switch (choice)
+                        {
+                            case (1):
+                                Console.WriteLine("Enter desired Width");
+                                int width =  int.Parse(Console.ReadLine());
+                                _game.ModRowSize(width);
+                                break;
+                            case (2):
+                                Console.WriteLine("Enter desired Height");
+                                int height =  int.Parse(Console.ReadLine());
+                                _game.ModColumnSize(height);
+                                break;
+                            case (3):
+                                Console.WriteLine("Enter desired start speed (In Milliseconds)");
+                                int startSpeed =  int.Parse(Console.ReadLine());
+                                _game.ModStartTickSpeed(startSpeed);
+                                break;
+                            case (4):
+                                Console.WriteLine("Enter desired minimum tick speed (In Milliseconds)");
+                                int minTickSpeed = int.Parse(Console.ReadLine());
+                                _game.ModMinTickSpeed(minTickSpeed);
+                                break;
+                            case (5):
+                                Console.WriteLine("Enter desired speed up time (In game ticks)");
+                                int speedUpTime = int.Parse(Console.ReadLine());
+                                _game.ModSpeedUpTime(speedUpTime);
+                                break;
+                            case (6):
+                                //Set default variables
+                                _game.RemoveMods();
+                                Console.Write("Variables Reset!");
+                                break;
+                            case (7):
+                                Console.WriteLine("Returning to menu...");
+                                confirmed = true;
+                                break;
+                        }
+                    }
+
+
                     break;
                 case "3":
                     inSettings = false;

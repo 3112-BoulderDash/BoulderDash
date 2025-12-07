@@ -8,6 +8,7 @@ public class Shop
     {
         ShopSkins = new List<ISkin>();
         ShopSkins.Add(new FerrariSkin());
+        ShopSkins.Add(new WheelSkin());
     }
     
     public void DisplayMenu()
