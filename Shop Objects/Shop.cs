@@ -25,6 +25,7 @@ public class Shop
 
     public bool BoughtItem(IAccount account)
     {
+        Console.WriteLine($"Points: {account.TotalPoints}");
         Console.WriteLine("Enter the number of the item you want to buy:");
         string? input = Console.ReadLine();
 
@@ -50,9 +51,14 @@ public class Shop
             Console.ReadKey();
             return false;
         }
+        
+        account.TotalPoints -= selectedItem.price;
+        
 
         //add item to player inventory
         account.PlayerSkins.Add(selectedItem);
+        
+        Console.WriteLine($"You now have {account.TotalPoints} points left.");
 
         Console.WriteLine($"You bought {selectedItem.name}!");
         return true;
