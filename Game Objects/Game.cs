@@ -12,18 +12,24 @@ public class Game
     public static Controller playerController = new Controller();
     public int Score { get; set; }
     
-    
-    public int rowLength { get; } = 3;
-    public static  int columnLength { get; } = 8;
+    private static int defaultRowLength = 3;
+    public int rowLength { get; set; } = defaultRowLength;
+    private static int defaultColLength = 8;
+    public static  int columnLength { get; set; } = defaultColLength;
     public static Car playerCar;
     
     //Replace with creation of game renderer
     //The Array that will be used to update the game
     private GameRenderer gameRenderer;
-    
-    private Clock gameClock = new Clock();
-    private int speedUpTime = 5;
-    private int speedUpTimer = 5;
+
+    private static int defaultTickSpeed = 60;
+    private int startTickSpeed = defaultTickSpeed;
+    private Clock gameClock;
+    private static int defaultSpeedUp = 5;
+    private int speedUpTime = defaultSpeedUp;
+    private int speedUpTimer;
+    private static int defaultMinTickSpeed = 14;
+    private int minTickSpeed = defaultMinTickSpeed;
 
     private Game()
     {
@@ -47,13 +53,14 @@ public class Game
         if (gameEnded) gameEnded = false;
         if (gamePaused) gamePaused = false;
         Score = 0;
+        speedUpTimer = speedUpTime;
         
         //Reset instances
         activeEntities = new List<TraversalEntity>();
         gameRenderer = new GameRenderer(rowLength, columnLength);
         gameRenderer.PopulateGameArray(activeEntities);
         obstacleSpawner = new ObstacleSpawner();
-        gameClock= new Clock();
+        gameClock= new Clock(startTickSpeed);
         
         //Possibly rewrite so that type is for the cars skin instead and remove equpiskin from this function list
         playerCar = new Car(1, columnLength-1, CarTypes.Ferrari, playerController);
@@ -90,7 +97,7 @@ public class Game
                 if (speedUpTimer == 0)
                 {
                     speedUpTimer = speedUpTime;
-                    if (gameClock.TickSpeed > 14) gameClock.TickSpeed -= 2;
+                    if (gameClock.TickSpeed > minTickSpeed) gameClock.TickSpeed -= 2;
                 }
 
                 //Spawn Obstacles / Tick for obstacle creation
@@ -138,6 +145,44 @@ public class Game
         gameEnded = true;
         
     }
+    
+    
+    //Remove Modifcations
+    public void RemoveMods()
+    {
+        rowLength =  defaultRowLength;
+        columnLength = defaultColLength; 
+        startTickSpeed = defaultTickSpeed;
+        minTickSpeed = defaultMinTickSpeed;
+        speedUpTimer = defaultSpeedUp;
+    }
+    
+    //Modification functions
+    public void ModRowSize(int size)
+    {
+        rowLength = size;
+    }
+    
+    public void ModColumnSize(int size)
+    {
+        columnLength = size;
+    }
+
+    public void ModStartTickSpeed(int miliseconds)
+    {
+        startTickSpeed = miliseconds;
+    }
+
+    public void ModMinTickSpeed(int miliseconds)
+    {
+        minTickSpeed = miliseconds;
+    }
+
+    public void ModSpeedUpTime(int ticks)
+    {
+        speedUpTime = ticks;
+    }
+    
     
 
     //Runs all the other instances code, Executes every tick. 
