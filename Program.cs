@@ -135,7 +135,7 @@ class Program
             Console.WriteLine("1. Start Game");
             Console.WriteLine("2. Display Leaderboard");
             Console.WriteLine("3. Shop");
-            Console.WriteLine("4. Equip Item");
+            Console.WriteLine("4. My Garage");
             Console.WriteLine("5. Logout");
             Console.WriteLine("6. Settings (Admin only)");
 
@@ -145,9 +145,10 @@ class Program
             switch (input)
             {
 
+                //Start Game
                 case "1":
                     //call for game start
-                    _game.StartGame();
+                    _game.StartGame(currentPlayer.SelectedSkin);
         
 
                     while (_game.GameIsRunning())
@@ -158,23 +159,38 @@ class Program
                         Console.ReadKey(true);
 
                     // log the score from game
-                    int finalScore = _game.Score;
-
+                    int finalScore = _game.Score - 1;
+                    
                     if (finalScore > 0)
                     {
+                        //Add points to account
                         currentPlayer.TotalPoints += finalScore;
                         IScoreCard card = new ScoreCard(currentPlayer.Username, finalScore);
                         leaderBoard.AddScore(card);
                         ScoreFileStorage.AppendScore(card);
 
                         Console.WriteLine($"Game over! You earned {finalScore} points this run.");
-                        Console.WriteLine($"Your new total points: {currentPlayer.TotalPoints}");
+                        Console.Write("\nYour new total points: ");
+                        //Show total in yellow 
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine(currentPlayer.TotalPoints);
+                        Console.ResetColor();
+                        
+                        //If they player is top of the leader board, tell them!
+                        if (leaderBoard.GetScore(0) == card)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine("\nHIGH SCORE! Your top of the leaderboard!\n");
+                            Console.ResetColor();
+                        }
                         Console.WriteLine("Press any key to return to the main menu...");
                         Console.ReadKey(true);
                     }
-
+                    
+                    //Login in score
                     break;
 
+                //Display leaderboard
                 case "2":
                     //Leaderboard menu
                     bool inLeaderBoard = true;
@@ -257,29 +273,34 @@ class Program
                     }
                     break;
                 
+                //Shop
                 case "3":
                     shop.DisplayMenu();
                     shop.BoughtItem(currentPlayer);
                     break;
+                
+                //Equip Item
                 case "4":
                     int choice = 1;
-                    Console.WriteLine("Welcome to the shop!");
+                    Console.WriteLine("Welcome to your garage!");
                     foreach (var item in currentPlayer.PlayerSkins)
                     {
                         Console.WriteLine($"{choice}. {item.name}");
                         choice++;
                     }
-                    Console.WriteLine("Enter the number of the item to buy:");
+                    Console.WriteLine("Enter the number for the car you want to take for a spin!");
                     string? itemchoice = Console.ReadLine();
                     if (!int.TryParse(itemchoice, out int option))
                     {
                         Console.WriteLine("Invalid input.");
                     }
-                    ISkin selectedItem = currentPlayer.PlayerSkins[option - 1];
-                    
-                    Game.playerCar.EquipSkin(selectedItem);
 
-                    //add item to player inventory
+                    ISkin selectedItem = currentPlayer.PlayerSkins[option - 1];
+                    currentPlayer.SelectedSkin = selectedItem; //Equip Skin
+                    
+                    //Game.playerCar.EquipSkin(selectedItem);
+
+                    //add item to player inventory/**/
                     
                     
                     break;

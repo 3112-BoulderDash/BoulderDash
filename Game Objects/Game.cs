@@ -15,7 +15,7 @@ public class Game
     
     public int rowLength { get; } = 3;
     public static  int columnLength { get; } = 8;
-    public static Car playerCar = new Car(1, columnLength-1, CarTypes.Ferrari, playerController);
+    public static Car playerCar;
     
     //Replace with creation of game renderer
     //The Array that will be used to update the game
@@ -41,18 +41,23 @@ public class Game
     }
     
     //Game functions
-    public void StartGame()
+    public void StartGame(ISkin selectedSkin)
     {
+        //Reset Variables
         if (gameEnded) gameEnded = false;
         if (gamePaused) gamePaused = false;
         Score = 0;
         
-        //Reset Variables needed here
+        //Reset instances
         activeEntities = new List<TraversalEntity>();
         gameRenderer = new GameRenderer(rowLength, columnLength);
         gameRenderer.PopulateGameArray(activeEntities);
-             
         obstacleSpawner = new ObstacleSpawner();
+        gameClock= new Clock();
+        
+        //Possibly rewrite so that type is for the cars skin instead and remove equpiskin from this function list
+        playerCar = new Car(1, columnLength-1, CarTypes.Ferrari, playerController);
+        playerCar.EquipSkin(selectedSkin);
         
         //Create the Player character and give them the controller
         AddInstance(playerCar);

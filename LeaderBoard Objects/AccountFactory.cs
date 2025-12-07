@@ -10,7 +10,8 @@ public class AccountFactory
     {
         public string Username { get; set; }
         public int Id { get; set; }
-        
+        public ISkin SelectedSkin { get; set; }
+
         public List<ISkin> PlayerSkins { get; set; }
         public bool IsAdmin => false;
         public int TotalPoints { get; set; }
@@ -23,6 +24,7 @@ public class AccountFactory
             //all accounts should have default skin in inventory
             PlayerSkins.Add(new DefaultSkin());
             TotalPoints = 0;
+            SelectedSkin = PlayerSkins[0];
         }
     }
     // admin account
@@ -30,6 +32,7 @@ public class AccountFactory
     {
         public string Username { get; set; }
         public int Id { get; set; }
+        public ISkin SelectedSkin { get; set; }
         public List<ISkin> PlayerSkins { get; set; }
         public bool IsAdmin => true;
         public int TotalPoints { get; set; }
@@ -38,6 +41,7 @@ public class AccountFactory
             Username = username;
             Id = id;
             PlayerSkins = new List<ISkin>();
+            SelectedSkin = new DefaultSkin();
             PlayerSkins.Add(new DefaultSkin());
             TotalPoints = 0;
         }
