@@ -19,12 +19,51 @@ public class Obstacles : TraversalEntity
     }
     public override String[] GetSprite()
     {
-        return new string[]
+        switch (Shape)
         {
-            "  8  ",
-            " 888 ",
-            "88888"
-        };
+            case (ObstacleShape.Tree):
+                return new string[]
+                {
+                    " 888 ",
+                    "88888",
+                    "  |  "
+                };
+            break;
+            case (ObstacleShape.Cone):
+                return new string[]
+                {
+                    "  _  ",
+                    " /=\\ ",
+                    "/___\\"
+                };
+            break;
+            case (ObstacleShape.Rocks):
+                return new string[]
+                {
+                    "  __ ",
+                    " /0 \\",
+                    "\\_0_/"
+                };
+                break;
+            
+            case (ObstacleShape.LooseTire):
+                return new string[]
+                {
+                    " []  ",
+                    "[][] ",
+                    "(000)"
+                };
+                break;
+            
+            default: 
+                return new string[]
+                {
+                    " 888 ",
+                    "88888",
+                    "  |  "
+                };
+                break;
+        }
     }
 
     public override void Step()

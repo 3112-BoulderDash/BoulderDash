@@ -23,7 +23,8 @@ public class ObstacleSpawner
             for (int i = 0; i < game.rowLength; i++)
             {
                 if (i == freeSpace) continue;
-                game.AddInstance(new Obstacles(i, 0));
+                ObstacleShape shape = (ObstacleShape)rand.Next(0, 4); 
+                game.AddInstance(new Obstacles(i, shape));
             }
         }
 

@@ -2,7 +2,8 @@ namespace  Boulder_Dash;
 
 public enum ObstacleShape
 {
-    Banana = 0,
-    Rocks = 1,
-    LooseTire = 2
+    Rocks = 0,
+    LooseTire = 1,
+    Tree = 2, 
+    Cone = 3,
 }
