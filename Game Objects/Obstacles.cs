@@ -12,11 +12,7 @@ public class Obstacles : TraversalEntity
     {
         
     }
-
-    public void DropObject(TraversalEntity Obstacle)
-    {
-        MoveDown();
-    }
+    
     public override String[] GetSprite()
     {
         switch (Shape)

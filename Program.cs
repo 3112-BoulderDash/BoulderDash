@@ -11,11 +11,13 @@ class Program
     private static Shop shop = new Shop();
     static void Main(string[] args)
     { 
+        AccountFileStorage.LoadAccounts(AccountFactory);
         leaderBoard = new LeaderBoard();
-        foreach (var score in ScoreFileStorage.LoadScores())
+        foreach (var score in ScoreFileStorage.LoadScores(AccountFactory))
         {
             leaderBoard.AddScore(score);
         }
+
         _game = Game.GetGameInstance();
         bool exitApplication = false;
         while (!exitApplication)
@@ -32,7 +34,10 @@ class Program
 
             // main menu returns to login menu if logout occurs
             RunMainMenu();
-        }
+            
+        }            
+        AccountFileStorage.SaveAccounts(AccountFactory);
+
     }
     
 
@@ -167,9 +172,18 @@ class Program
                     {
                         //Add points to account
                         currentPlayer.TotalPoints += finalScore;
-                        IScoreCard card = new ScoreCard(currentPlayer.Username, finalScore);
-                        leaderBoard.AddScore(card);
-                        ScoreFileStorage.AppendScore(card);
+                        IScoreCard card = new ScoreCard(currentPlayer.Id, finalScore, currentPlayer.Username);
+                        try
+                        {
+
+
+                            leaderBoard.AddScore(card);
+                            ScoreFileStorage.AppendScore(card);
+                        }
+                        catch  (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
 
                         Console.WriteLine($"Game over! You earned {finalScore} points this run.");
                         Console.Write("\nYour new total points: ");
@@ -216,8 +230,7 @@ class Program
                                 Console.WriteLine("Your Scores:");
                                 foreach (var s in localScores)
                                 {
-                                    Console.WriteLine($"{s.Username} : {s.ScoreCount}");
-                                }
+                                    Console.WriteLine($"ID {s.PlayerId} | {s.Username} : {s.ScoreCount}");                                }
 
 
                                 break;
@@ -229,19 +242,22 @@ class Program
                                 Console.WriteLine("All Scores:");
                                 foreach (var s in allScores)
                                 {
-                                    Console.WriteLine($"{s.Username} : {s.ScoreCount}");
-                                }
+                                    Console.WriteLine($"ID {s.PlayerId} | {s.Username} : {s.ScoreCount}");                                }
                                 break;
                             case "3":
                                 //Leaderboard by index in ordered list by top score
                                 Console.WriteLine("Enter an index (int) ");
             
-                                int index = int.Parse(Console.ReadLine());
+                                if (!int.TryParse(Console.ReadLine(), out int index))
+                                {
+                                    Console.WriteLine("Invalid number.");
+                                    break;
+                                }
                                 var score = leaderBoard.GetScore(index);
 
                                 if (score != null)
                                 {
-                                    Console.WriteLine($"{score.Username} : {score.ScoreCount}");
+                                    Console.WriteLine($"ID {score.PlayerId} | {score.Username} : {score.ScoreCount}");
                                 }
                                 else
                                 {
@@ -253,13 +269,17 @@ class Program
                                 //Leaderboard with cap
                                 Console.WriteLine("Enter a number(cap) (int) ");
             
-                                int thing = int.Parse(Console.ReadLine());
-                                var topScores = leaderBoard.GetTopScores(thing);
+                                if (!int.TryParse(Console.ReadLine(), out int cap))
+                                {
+                                    Console.WriteLine("Invalid number.");
+                                    break;
+                                }
+                                var topScores = leaderBoard.GetTopScores(cap);
 
-                                Console.WriteLine($"Top {thing} Scores:");
+                                Console.WriteLine($"Top {cap} Scores:");
                                 foreach (var s in topScores)
                                 {
-                                    Console.WriteLine($"{s.Username} : {s.ScoreCount}");
+                                    Console.WriteLine($"ID {s.PlayerId} | {s.Username} : {s.ScoreCount}");
                                 }
 
                                 break;
@@ -295,6 +315,13 @@ class Program
                     if (!int.TryParse(itemchoice, out int option))
                     {
                         Console.WriteLine("Invalid input.");
+                        break;
+                    }
+                    //check if index within bounds
+                    if (option < 1 || option > currentPlayer.PlayerSkins.Count)
+                    {
+                        Console.WriteLine("Invalid skin selection.");
+                        break;
                     }
 
                     ISkin selectedItem = currentPlayer.PlayerSkins[option - 1];
@@ -353,22 +380,32 @@ class Program
             switch (input)
             {
                 case "1":
-                    Console.Write("Enter number of points to give yourself: ");
-                    string? pointsInput = Console.ReadLine();
-                    if (int.TryParse(pointsInput, out int points) && points > 0)
+                    try
                     {
-                        IScoreCard card = new ScoreCard(currentPlayer.Username, points);
-                        leaderBoard.AddScore(card);
-                        ScoreFileStorage.AppendScore(card);
 
-                        currentPlayer.TotalPoints += points;
 
-                        Console.WriteLine($"Gave {currentPlayer.Username} {points} points.");
+                        Console.Write("Enter number of points to give yourself: ");
+                        string? pointsInput = Console.ReadLine();
+                        if (int.TryParse(pointsInput, out int points) && points > 0)
+                        {
+                            IScoreCard card = new ScoreCard(currentPlayer.Id, points, currentPlayer.Username);
+                            leaderBoard.AddScore(card);
+                            ScoreFileStorage.AppendScore(card);
+
+                            currentPlayer.TotalPoints += points;
+
+                            Console.WriteLine($"Gave {currentPlayer.Username} {points} points.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid points value.");
+                        }
                     }
-                    else
+                    catch
                     {
-                        Console.WriteLine("Invalid points value.");
+                        Console.WriteLine("Invalid input.");
                     }
+
                     Console.WriteLine("Press any key to return...");
                     Console.ReadKey(true);
                     break;
@@ -385,44 +422,51 @@ class Program
                         Console.WriteLine("5) Change Speed Up Time");
                         Console.WriteLine("6) Reset Variables");
                         Console.WriteLine("7) Confirm Choices");
-
-                        int choice = int.Parse(Console.ReadLine());
-                        switch (choice)
+                        try
                         {
-                            case (1):
-                                Console.WriteLine("Enter desired Width");
-                                int width =  int.Parse(Console.ReadLine());
-                                _game.ModRowSize(width);
-                                break;
-                            case (2):
-                                Console.WriteLine("Enter desired Height");
-                                int height =  int.Parse(Console.ReadLine());
-                                _game.ModColumnSize(height);
-                                break;
-                            case (3):
-                                Console.WriteLine("Enter desired start speed (In Milliseconds)");
-                                int startSpeed =  int.Parse(Console.ReadLine());
-                                _game.ModStartTickSpeed(startSpeed);
-                                break;
-                            case (4):
-                                Console.WriteLine("Enter desired minimum tick speed (In Milliseconds)");
-                                int minTickSpeed = int.Parse(Console.ReadLine());
-                                _game.ModMinTickSpeed(minTickSpeed);
-                                break;
-                            case (5):
-                                Console.WriteLine("Enter desired speed up time (In game ticks)");
-                                int speedUpTime = int.Parse(Console.ReadLine());
-                                _game.ModSpeedUpTime(speedUpTime);
-                                break;
-                            case (6):
-                                //Set default variables
-                                _game.RemoveMods();
-                                Console.Write("Variables Reset!");
-                                break;
-                            case (7):
-                                Console.WriteLine("Returning to menu...");
-                                confirmed = true;
-                                break;
+                            int choice = int.Parse(Console.ReadLine());
+                            switch (choice)
+                            {
+                                case (1):
+                                    Console.WriteLine("Enter desired Width");
+                                    int width = int.Parse(Console.ReadLine());
+                                    _game.ModRowSize(width);
+                                    break;
+                                case (2):
+                                    Console.WriteLine("Enter desired Height");
+                                    int height = int.Parse(Console.ReadLine());
+                                    _game.ModColumnSize(height);
+                                    break;
+                                case (3):
+                                    Console.WriteLine("Enter desired start speed (In Milliseconds)");
+                                    int startSpeed = int.Parse(Console.ReadLine());
+                                    _game.ModStartTickSpeed(startSpeed);
+                                    break;
+                                case (4):
+                                    Console.WriteLine("Enter desired minimum tick speed (In Milliseconds)");
+                                    int minTickSpeed = int.Parse(Console.ReadLine());
+                                    _game.ModMinTickSpeed(minTickSpeed);
+                                    break;
+                                case (5):
+                                    Console.WriteLine("Enter desired speed up time (In game ticks)");
+                                    int speedUpTime = int.Parse(Console.ReadLine());
+                                    _game.ModSpeedUpTime(speedUpTime);
+                                    break;
+                                case (6):
+                                    //Set default variables
+                                    _game.RemoveMods();
+                                    Console.Write("Variables Reset!");
+                                    break;
+                                case (7):
+                                    Console.WriteLine("Returning to menu...");
+                                    confirmed = true;
+                                    break;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.Message);
+                            Console.WriteLine("Enter a valid number");
                         }
                     }
 
